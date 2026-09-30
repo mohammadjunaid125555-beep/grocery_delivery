@@ -20,14 +20,20 @@ jobs:
           flutter-version: '3.29.0'
           channel: stable
 
-      - name: Get dependencies
-        run: flutter pub get
+      - name: Create Flutter project
+        run: flutter create freshcart
+
+      - name: Copy main.dart
+        run: cp main.dart freshcart/lib/main.dart
 
       - name: Build APK
-        run: flutter build apk --release
+        run: |
+          cd freshcart
+          flutter pub get
+          flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FreshCart-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: freshcart/build/app/outputs/flutter-apk/app-release.apk
