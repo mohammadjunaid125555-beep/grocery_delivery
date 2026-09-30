@@ -1,0 +1,41 @@
+name: Build FreshCart APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.0'
+          channel: stable
+
+      - name: Create Flutter project
+        run: |
+          flutter create --project-name freshcart .
+          
+      - name: Restore app files
+        run: |
+          cp main.dart lib/main.dart
+          
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FreshCart-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
