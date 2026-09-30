@@ -21,21 +21,21 @@ jobs:
           channel: stable
 
       - name: Create Flutter project
+        run: flutter create freshcart
+
+      - name: Copy app files
         run: |
-          flutter create --project-name freshcart .
-          
-      - name: Restore app files
-        run: |
-          cp main.dart lib/main.dart
-          
+          cp main.dart freshcart/lib/main.dart
+          cp pubspec.yaml freshcart/pubspec.yaml
+
       - name: Get dependencies
-        run: flutter pub get
+        run: cd freshcart && flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release
+        run: cd freshcart && flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FreshCart-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: freshcart/build/app/outputs/flutter-apk/app-release.apk
